@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>StringsTable</key>
+	<string>Help</string>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<!-- ====== 介绍 ====== -->
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>T9u — 智能 T9 拼音拨号</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>T9u 是一款致敬华为 T9 拨号体验的智能拨号应用，支持拼音首字母/全拼搜索、号码归属地、骚扰标记、SIM 卡切换等丰富功能。</string>
+			<key>Key</key>
+			<string>help_intro</string>
+			<key>DefaultValue</key>
+			<string></string>
+		</dict>
+
+		<!-- ====== 拨号搜索 ====== -->
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>🔍 拨号搜索</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>在拨号键盘输入数字，系统自动匹配通讯录中姓名拼音对应的联系人。支持全拼和首字母两种模式，结果实时显示在键盘上方。</string>
+			<key>Key</key>
+			<string>help_t9_search</string>
+			<key>DefaultValue</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>示例：输入 926 → 匹配「王」(WANG)、「赵」(ZHAO)、「杨」(YANG) 等。输入 9264 → 匹配「王鑫」(WANG XIN)。</string>
+			<key>Key</key>
+			<string>help_t9_example</string>
+			<key>DefaultValue</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>【隐藏】拼音后输入数字（≥3 位）可匹配号码后四位。例如：搜索 王 5268 → 同时匹配姓名和号码后四位，精准直达。</string>
+			<key>Key</key>
+			<string>help_last4</string>
+			<key>DefaultValue</key>
+			<string></string>
+		</dict>
+
+		<!-- ====== SIM 卡 ====== -->
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>📶 SIM 卡切换</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>拨号键盘左上角有 SIM 切换按钮，点击可在 SIM1 / SIM2 之间切换当前拨号线路。可在设置 &gt; SIM 卡设置中自定义两张卡的显示名称。</string>
+			<key>Key</key>
+			<string>help_sim</string>
+			<key>DefaultValue</key>
+			<string></string>
+		</dict>
+
+		<!-- ====== 通讯录 ====== -->
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>👤 通讯录</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>通讯录 Tab 展示系统全部联系人，支持按姓名搜索。点击联系人可通过原生详情页查看完整信息。</string>
+			<key>Key</key>
+			<string>help_contacts</string>
+			<key>DefaultValue</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>【隐藏】在联系人详情页顶部导航栏右侧，点击 ⭐ 星标按钮可收藏联系人。如果联系人有多个号码，会弹出号码选择窗口。</string>
+			<key>Key</key>
+			<string>help_star</string>
+			<key>DefaultValue</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>收藏的联系人会出现在「收藏」Tab，方便一键拨号。已收藏的联系人在通讯录列表中右侧也会显示黄色星标。</string>
+			<key>Key</key>
+			<string>help_favorites_tab</string>
+			<key>DefaultValue</key>
+			<string></string>
+		</dict>
+
+		<!-- ====== 号码识别 ====== -->
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>🏷️ 号码识别</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>输入任意手机号/固话时，自动显示号码归属地。国内格式「省份 城市」，国外显示国家名，不含运营商信息。</string>
+			<key>Key</key>
+			<string>help_attribution</string>
+			<key>DefaultValue</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>已知骚扰/诈骗/广告等号码自动标记为对应标签，帮助您识别陌生来电。可在设置中关闭此功能。</string>
+			<key>Key</key>
+			<string>help_spam</string>
+			<key>DefaultValue</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>【隐藏】在搜索结果中长按某个号码，可选择"添加标签"手动标记号码，下次输入时自动显示自定义标签。</string>
+			<key>Key</key>
+			<string>help_custom_label</string>
+			<key>DefaultValue</key>
+			<string></string>
+		</dict>
+
+		<!-- ====== 通话记录 ====== -->
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>📞 通话与记录</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>「最近通话」Tab 展示呼出、呼入和未接来电记录，支持按通话频率排序，高频联系人自动优先显示。</string>
+			<key>Key</key>
+			<string>help_recents</string>
+			<key>DefaultValue</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>底部拨号盘上方实时显示匹配的联系人搜索结果，点击即可拨号或查看详情。</string>
+			<key>Key</key>
+			<string>help_suggestion</string>
+			<key>DefaultValue</key>
+			<string></string>
+		</dict>
+
+		<!-- ====== 操作技巧 ====== -->
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>💡 操作技巧</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>• 键盘输入拼音直接搜索联系人，无需切换到通讯录 Tab
+• 搜索结果中点击联系人直接拨号
+• 长按拨号键触发快速拨打（可在设置中关闭）
+• 拨号页面左上角切换 SIM 卡
+• 通讯录详情页 ⭐ 收藏联系人
+• 长按搜索结果中的号码可自定义标签</string>
+			<key>Key</key>
+			<string>help_tips</string>
+			<key>DefaultValue</key>
+			<string></string>
+		</dict>
+
+		<!-- ====== 设置说明 ====== -->
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>⚙️ 设置说明</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>• 按键音：拨号时的按键声效
+• 拨号振动反馈：按键时震动
+• 长按快速拨打：长按拨号键直接拨打
+• 显示号码归属地：输入号码时显示归属信息
+• 显示骚扰标记：标记已知骚扰号码
+• 按通话频率排序：搜索结果按拨打频率排序
+• SIM 卡设置：自定义 SIM1/SIM2 显示名称</string>
+			<key>Key</key>
+			<string>help_settings</string>
+			<key>DefaultValue</key>
+			<string></string>
+		</dict>
+	</array>
+</dict>
+</plist>

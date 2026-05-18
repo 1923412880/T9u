@@ -1,0 +1,43 @@
+name: T9u
+options:
+  bundleIdPrefix: com.t9u
+  deploymentTarget:
+    iOS: "26.5"
+  generateEmptyDirectories: false
+
+settings:
+  base:
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "5.0"
+    TARGETED_DEVICE_FAMILY: "1"
+    CODE_SIGN_STYLE: Automatic
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_IDENTITY: "Apple Development"
+
+targets:
+  T9u:
+    type: application
+    platform: iOS
+    sources:
+      - App
+      - Keypad
+      - Contacts
+      - ContactsTab
+      - Favorites
+      - Recents
+      - Voicemail
+      - path: Resources
+        excludes:
+          - Info.plist
+          - PhoneAttribution_Dict.swift
+          - PhoneAttribution_Generated.swift
+      - path: Resources/Settings.bundle
+        type: resources
+    dependencies:
+      - framework: CallKit.framework
+        embed: false
+    settings:
+      base:
+        INFOPLIST_FILE: $(SRCROOT)/Resources/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.t9u.app

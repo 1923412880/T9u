@@ -1,0 +1,586 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		041896679CA2871DA4ACE72B /* MockContactSeeder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8556D17756347B3C19B52B /* MockContactSeeder.swift */; };
+		0459E4EF63527CE6E9387D9C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E6C09B49F83B774272CD20F3 /* Assets.xcassets */; };
+		19A922BA2F522801D4A7C596 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3919B9163AD00C9E02EBFE30 /* ContentView.swift */; };
+		23FD48B27FB767329FA15E58 /* KeypadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82D9B10BBB6126179AEC93F4 /* KeypadView.swift */; };
+		2675A9A968210874B564774B /* KeypadViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B762EA0FF292912AE57680 /* KeypadViewModel.swift */; };
+		3BFC65D00DA05C040338418D /* T9uApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD2E80A65DF1A7CC1CD7961 /* T9uApp.swift */; };
+		4112A5A01814989891E8D1BF /* VoicemailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E394C31AAF3B6198F432E124 /* VoicemailView.swift */; };
+		4360CB67AD9D64A9287C1637 /* ContactSuggestionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DDE27C7A4D2A2A1691F177 /* ContactSuggestionRow.swift */; };
+		49381DD4C3F4A8783B27FAFA /* CallKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D936A4D08734F3BF7B39D23 /* CallKit.framework */; };
+		50A0782604C971266C106A83 /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BCC902D91553A1F8002C63 /* FavoritesView.swift */; };
+		50F5E1149E1DB6FCB2FADD5D /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD9669B345F278072DFEC9E /* AppSettings.swift */; };
+		5DBC832B502F3D13AB8419EB /* FavoritesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2132E908343AC018B63D48EA /* FavoritesManager.swift */; };
+		64CA582CF0152541AB1CC600 /* ContactsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E8AC91CA9921D4B89751E7C /* ContactsListView.swift */; };
+		725D7D800A233A09489FBFCA /* PhoneAttribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = B765BA807DF5FC2E21235144 /* PhoneAttribution.swift */; };
+		76C4EEDA95D9AE194AA300AB /* Color+T9u.swift in Sources */ = {isa = PBXBuildFile; fileRef = C621D92887B8645A1A6C2595 /* Color+T9u.swift */; };
+		8D72A71EEC8F7ECAD8D19CDF /* RecentHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 106DB5BD40DB4C58E3E8574E /* RecentHistoryView.swift */; };
+		8ECF3088D44E0CC53C08B48E /* PhoneDatabases.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00ED6B97DB0D8C219650FA4 /* PhoneDatabases.swift */; };
+		A41659EB2B82916D94A0D95F /* RecentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20688F88A0AC174CFF830C4 /* RecentsView.swift */; };
+		AA3652A374183B9C8819C534 /* T9Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 767D0B7A9F629A6FA5F2D40C /* T9Utility.swift */; };
+		B032209DE635C76A0599E44C /* GlassEffectContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C33F6ED5753524C76174FA8 /* GlassEffectContainer.swift */; };
+		B1F937B0D33026F949D9C1FC /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 093AF2ED5473A42FD7528703 /* Settings.bundle */; };
+		BA7681AC717C002CD69BC32F /* T9SearchEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470E53393FFF4821CD08063A /* T9SearchEngine.swift */; };
+		BD82608CE2279F7FA9506451 /* ContactID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C167D12F8B205113118BE01 /* ContactID.swift */; };
+		D7C45952254BD458DEFB07A6 /* DTMFPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69DDAED1753D43DC286EC93 /* DTMFPlayer.swift */; };
+		D85F614BF314C6815E271A6C /* DigitButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD004EAC866D10AD55691D0A /* DigitButtonView.swift */; };
+		DE5B2D3B13861A8071C8C38B /* ContactDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358ED228149086BD3E3027A0 /* ContactDetailView.swift */; };
+		E64FA89620E9011061614643 /* ContactStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C7D336A47560A86489E654 /* ContactStore.swift */; };
+		E6C6EFB4A344D32ABA2357FB /* CallKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E06088839347D02389E08E0 /* CallKitManager.swift */; };
+		EE29C34EDFA23200FED07280 /* phone.dat in Resources */ = {isa = PBXBuildFile; fileRef = A9C2ECFB3CBDE847CB08D95A /* phone.dat */; };
+		F5676480B209217DEF6FDB3F /* NumberDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4494C8792DCC855858D6D166 /* NumberDisplayView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		093AF2ED5473A42FD7528703 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = wrapper.cfbundle; path = Settings.bundle; sourceTree = "<group>"; };
+		0C33F6ED5753524C76174FA8 /* GlassEffectContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassEffectContainer.swift; sourceTree = "<group>"; };
+		106DB5BD40DB4C58E3E8574E /* RecentHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentHistoryView.swift; sourceTree = "<group>"; };
+		2132E908343AC018B63D48EA /* FavoritesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesManager.swift; sourceTree = "<group>"; };
+		2E8AC91CA9921D4B89751E7C /* ContactsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsListView.swift; sourceTree = "<group>"; };
+		358ED228149086BD3E3027A0 /* ContactDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactDetailView.swift; sourceTree = "<group>"; };
+		3919B9163AD00C9E02EBFE30 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		4494C8792DCC855858D6D166 /* NumberDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberDisplayView.swift; sourceTree = "<group>"; };
+		470E53393FFF4821CD08063A /* T9SearchEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = T9SearchEngine.swift; sourceTree = "<group>"; };
+		4D936A4D08734F3BF7B39D23 /* CallKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CallKit.framework; sourceTree = "<group>"; };
+		57B762EA0FF292912AE57680 /* KeypadViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeypadViewModel.swift; sourceTree = "<group>"; };
+		767D0B7A9F629A6FA5F2D40C /* T9Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = T9Utility.swift; sourceTree = "<group>"; };
+		7C167D12F8B205113118BE01 /* ContactID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactID.swift; sourceTree = "<group>"; };
+		7DD2E80A65DF1A7CC1CD7961 /* T9uApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = T9uApp.swift; sourceTree = "<group>"; };
+		7E06088839347D02389E08E0 /* CallKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallKitManager.swift; sourceTree = "<group>"; };
+		82D9B10BBB6126179AEC93F4 /* KeypadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeypadView.swift; sourceTree = "<group>"; };
+		A5C7D336A47560A86489E654 /* ContactStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactStore.swift; sourceTree = "<group>"; };
+		A9C2ECFB3CBDE847CB08D95A /* phone.dat */ = {isa = PBXFileReference; path = phone.dat; sourceTree = "<group>"; };
+		B4BCC902D91553A1F8002C63 /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
+		B765BA807DF5FC2E21235144 /* PhoneAttribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneAttribution.swift; sourceTree = "<group>"; };
+		BD004EAC866D10AD55691D0A /* DigitButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigitButtonView.swift; sourceTree = "<group>"; };
+		C0DDE27C7A4D2A2A1691F177 /* ContactSuggestionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactSuggestionRow.swift; sourceTree = "<group>"; };
+		C332565B3EE410C10C975D70 /* T9u.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = T9u.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C621D92887B8645A1A6C2595 /* Color+T9u.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+T9u.swift"; sourceTree = "<group>"; };
+		C69DDAED1753D43DC286EC93 /* DTMFPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTMFPlayer.swift; sourceTree = "<group>"; };
+		D00ED6B97DB0D8C219650FA4 /* PhoneDatabases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneDatabases.swift; sourceTree = "<group>"; };
+		E394C31AAF3B6198F432E124 /* VoicemailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoicemailView.swift; sourceTree = "<group>"; };
+		E6C09B49F83B774272CD20F3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EE8556D17756347B3C19B52B /* MockContactSeeder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockContactSeeder.swift; sourceTree = "<group>"; };
+		F20688F88A0AC174CFF830C4 /* RecentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentsView.swift; sourceTree = "<group>"; };
+		FAD9669B345F278072DFEC9E /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		810A39C7FC0AB2876AA97157 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				49381DD4C3F4A8783B27FAFA /* CallKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		036FC2C18230F6CE145A331B /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				C69DDAED1753D43DC286EC93 /* DTMFPlayer.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		054ABBAAACA4B178B7DF3522 /* ContactsTab */ = {
+			isa = PBXGroup;
+			children = (
+				A216EA6D5F26C5B8002D65FE /* Models */,
+				4EE95F6175F8A9B72DF3881E /* Views */,
+			);
+			path = ContactsTab;
+			sourceTree = "<group>";
+		};
+		0F79241714D54A69DCDD2221 /* Voicemail */ = {
+			isa = PBXGroup;
+			children = (
+				8AC330D4891E1C8A4E19ADA7 /* Views */,
+			);
+			path = Voicemail;
+			sourceTree = "<group>";
+		};
+		11965ECA66E39D64A34FB549 /* Contacts */ = {
+			isa = PBXGroup;
+			children = (
+				240B6D5E7BC9455B4AE61609 /* Services */,
+			);
+			path = Contacts;
+			sourceTree = "<group>";
+		};
+		143F0E2FC7E5292248A69EA2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4D936A4D08734F3BF7B39D23 /* CallKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		17E56293B046EE88177AE47C /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				57B762EA0FF292912AE57680 /* KeypadViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		1E80629CFE0290819F62E5F6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C0DDE27C7A4D2A2A1691F177 /* ContactSuggestionRow.swift */,
+				BD004EAC866D10AD55691D0A /* DigitButtonView.swift */,
+				82D9B10BBB6126179AEC93F4 /* KeypadView.swift */,
+				4494C8792DCC855858D6D166 /* NumberDisplayView.swift */,
+				106DB5BD40DB4C58E3E8574E /* RecentHistoryView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		240B6D5E7BC9455B4AE61609 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				7E06088839347D02389E08E0 /* CallKitManager.swift */,
+				A5C7D336A47560A86489E654 /* ContactStore.swift */,
+				EE8556D17756347B3C19B52B /* MockContactSeeder.swift */,
+				B765BA807DF5FC2E21235144 /* PhoneAttribution.swift */,
+				D00ED6B97DB0D8C219650FA4 /* PhoneDatabases.swift */,
+				470E53393FFF4821CD08063A /* T9SearchEngine.swift */,
+				767D0B7A9F629A6FA5F2D40C /* T9Utility.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		2F730C5F46504D58E4D94E58 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				FAD9669B345F278072DFEC9E /* AppSettings.swift */,
+				C621D92887B8645A1A6C2595 /* Color+T9u.swift */,
+				3919B9163AD00C9E02EBFE30 /* ContentView.swift */,
+				0C33F6ED5753524C76174FA8 /* GlassEffectContainer.swift */,
+				7DD2E80A65DF1A7CC1CD7961 /* T9uApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		39962335079A959937632B1E /* Keypad */ = {
+			isa = PBXGroup;
+			children = (
+				036FC2C18230F6CE145A331B /* Services */,
+				17E56293B046EE88177AE47C /* ViewModels */,
+				1E80629CFE0290819F62E5F6 /* Views */,
+			);
+			path = Keypad;
+			sourceTree = "<group>";
+		};
+		4EE95F6175F8A9B72DF3881E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				358ED228149086BD3E3027A0 /* ContactDetailView.swift */,
+				2E8AC91CA9921D4B89751E7C /* ContactsListView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		8045B6025F67C3630C81CF2C /* Recents */ = {
+			isa = PBXGroup;
+			children = (
+				BD7140CC349943C7BA3561E1 /* Views */,
+			);
+			path = Recents;
+			sourceTree = "<group>";
+		};
+		89BBD8E4D1D236E4C7C650B3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C332565B3EE410C10C975D70 /* T9u.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8AC330D4891E1C8A4E19ADA7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E394C31AAF3B6198F432E124 /* VoicemailView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A216EA6D5F26C5B8002D65FE /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7C167D12F8B205113118BE01 /* ContactID.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A4F8A1FFB6E751C76F848C11 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B4BCC902D91553A1F8002C63 /* FavoritesView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		BD7140CC349943C7BA3561E1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F20688F88A0AC174CFF830C4 /* RecentsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C49C00E97A160B5EC626F676 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E6C09B49F83B774272CD20F3 /* Assets.xcassets */,
+				A9C2ECFB3CBDE847CB08D95A /* phone.dat */,
+				093AF2ED5473A42FD7528703 /* Settings.bundle */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		CD6DD22694F7723DA4453081 = {
+			isa = PBXGroup;
+			children = (
+				2F730C5F46504D58E4D94E58 /* App */,
+				11965ECA66E39D64A34FB549 /* Contacts */,
+				054ABBAAACA4B178B7DF3522 /* ContactsTab */,
+				D860B7AFF5B88DAD6BF7F753 /* Favorites */,
+				39962335079A959937632B1E /* Keypad */,
+				8045B6025F67C3630C81CF2C /* Recents */,
+				C49C00E97A160B5EC626F676 /* Resources */,
+				0F79241714D54A69DCDD2221 /* Voicemail */,
+				143F0E2FC7E5292248A69EA2 /* Frameworks */,
+				89BBD8E4D1D236E4C7C650B3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D860B7AFF5B88DAD6BF7F753 /* Favorites */ = {
+			isa = PBXGroup;
+			children = (
+				F95F983D030947C8E29ACFB3 /* Services */,
+				A4F8A1FFB6E751C76F848C11 /* Views */,
+			);
+			path = Favorites;
+			sourceTree = "<group>";
+		};
+		F95F983D030947C8E29ACFB3 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				2132E908343AC018B63D48EA /* FavoritesManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B3665B87C94CB82279186E5C /* T9u */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D91A7969C1A2736BA3182AB7 /* Build configuration list for PBXNativeTarget "T9u" */;
+			buildPhases = (
+				A8B9058A18E68153A9484C2F /* Sources */,
+				A6E7D67B30C05CBD216B412E /* Resources */,
+				810A39C7FC0AB2876AA97157 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = T9u;
+			packageProductDependencies = (
+			);
+			productName = T9u;
+			productReference = C332565B3EE410C10C975D70 /* T9u.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FF10DD3CC3383C5C633CEC96 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					B3665B87C94CB82279186E5C = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = FA09CEA6A7FB875B5DA19E6F /* Build configuration list for PBXProject "T9u" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = CD6DD22694F7723DA4453081;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 89BBD8E4D1D236E4C7C650B3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B3665B87C94CB82279186E5C /* T9u */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A6E7D67B30C05CBD216B412E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0459E4EF63527CE6E9387D9C /* Assets.xcassets in Resources */,
+				B1F937B0D33026F949D9C1FC /* Settings.bundle in Resources */,
+				EE29C34EDFA23200FED07280 /* phone.dat in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A8B9058A18E68153A9484C2F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50F5E1149E1DB6FCB2FADD5D /* AppSettings.swift in Sources */,
+				E6C6EFB4A344D32ABA2357FB /* CallKitManager.swift in Sources */,
+				76C4EEDA95D9AE194AA300AB /* Color+T9u.swift in Sources */,
+				DE5B2D3B13861A8071C8C38B /* ContactDetailView.swift in Sources */,
+				BD82608CE2279F7FA9506451 /* ContactID.swift in Sources */,
+				E64FA89620E9011061614643 /* ContactStore.swift in Sources */,
+				4360CB67AD9D64A9287C1637 /* ContactSuggestionRow.swift in Sources */,
+				64CA582CF0152541AB1CC600 /* ContactsListView.swift in Sources */,
+				19A922BA2F522801D4A7C596 /* ContentView.swift in Sources */,
+				D7C45952254BD458DEFB07A6 /* DTMFPlayer.swift in Sources */,
+				D85F614BF314C6815E271A6C /* DigitButtonView.swift in Sources */,
+				5DBC832B502F3D13AB8419EB /* FavoritesManager.swift in Sources */,
+				50A0782604C971266C106A83 /* FavoritesView.swift in Sources */,
+				B032209DE635C76A0599E44C /* GlassEffectContainer.swift in Sources */,
+				23FD48B27FB767329FA15E58 /* KeypadView.swift in Sources */,
+				2675A9A968210874B564774B /* KeypadViewModel.swift in Sources */,
+				041896679CA2871DA4ACE72B /* MockContactSeeder.swift in Sources */,
+				F5676480B209217DEF6FDB3F /* NumberDisplayView.swift in Sources */,
+				725D7D800A233A09489FBFCA /* PhoneAttribution.swift in Sources */,
+				8ECF3088D44E0CC53C08B48E /* PhoneDatabases.swift in Sources */,
+				8D72A71EEC8F7ECAD8D19CDF /* RecentHistoryView.swift in Sources */,
+				A41659EB2B82916D94A0D95F /* RecentsView.swift in Sources */,
+				BA7681AC717C002CD69BC32F /* T9SearchEngine.swift in Sources */,
+				AA3652A374183B9C8819C534 /* T9Utility.swift in Sources */,
+				3BFC65D00DA05C040338418D /* T9uApp.swift in Sources */,
+				4112A5A01814989891E8D1BF /* VoicemailView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		09A37493679B307BE2972583 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.t9u.app;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		45DC8E6F068D4632C4EA47C5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		4E7F27A8F12DECCDA1DBE039 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		6ACEE8609103613A0B5C0820 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.t9u.app;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D91A7969C1A2736BA3182AB7 /* Build configuration list for PBXNativeTarget "T9u" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6ACEE8609103613A0B5C0820 /* Debug */,
+				09A37493679B307BE2972583 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FA09CEA6A7FB875B5DA19E6F /* Build configuration list for PBXProject "T9u" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				45DC8E6F068D4632C4EA47C5 /* Debug */,
+				4E7F27A8F12DECCDA1DBE039 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FF10DD3CC3383C5C633CEC96 /* Project object */;
+}
