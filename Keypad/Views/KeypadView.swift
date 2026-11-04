@@ -34,6 +34,7 @@ struct KeypadView: View {
     @State private var justDidLongPress = false
     @State private var showingSettings = false
     @State private var showSIMHint = false
+    @State private var keypadHidden = false
     @AppStorage("sim1_name") private var sim1Name: String = "SIM1"
     @AppStorage("sim2_name") private var sim2Name: String = "SIM2"
     @Environment(\.colorScheme) private var colorScheme
@@ -107,8 +108,11 @@ struct KeypadView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                         .padding(.horizontal, 16)
                         .padding(.top, 8)
-                        .onChange(of: viewModel.dialedNumber) { _ in
+                        .onChange(of: viewModel.dialedNumber) { newValue in
                             expandedContacts.removeAll()
+                            if newValue.isEmpty && keypadHidden {
+                                withAnimation(.easeInOut(duration: 0.25)) { keypadHidden = false }
+                            }
                         }
                 }
                 
@@ -117,7 +121,8 @@ struct KeypadView: View {
             .padding(.top, 34)
             .frame(maxHeight: .infinity)
             
-            // ── 拨号盘 + 底部按钮，从底部向上固定 ──
+            // ── 拨号盘 + 底部按钮（滑动候选区后隐藏，右下角按钮恢复）──
+            if !keypadHidden {
             VStack(spacing: 12) {
                 keypadGrid
                 
@@ -138,6 +143,8 @@ struct KeypadView: View {
                 }
             }
             .padding(.bottom, 24)  // 距底部 24pt
+            .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
         }
         .task {
             if CNContactStore.authorizationStatus(for: .contacts) == .authorized {
@@ -160,6 +167,22 @@ struct KeypadView: View {
                 addContactButton
                     .padding(.trailing, 16)
                     .padding(.top, 8)
+            }
+        }
+        .overlay(alignment: .bottomTrailing) {
+            if keypadHidden {
+                Button {
+                    withAnimation(.easeInOut(duration: 0.25)) { keypadHidden = false }
+                } label: {
+                    Image(systemName: "circle.grid.3x3.fill")
+                        .font(.system(size: 20, weight: .medium))
+                        .foregroundStyle(.white)
+                        .frame(width: 52, height: 52)
+                        .background(Circle().fill(Color.accentColor))
+                }
+                .padding(.trailing, 24)
+                .padding(.bottom, 36)
+                .accessibilityLabel("恢复拨号键盘")
             }
         }
         .sheet(isPresented: $showAddContact) {
@@ -262,7 +285,15 @@ struct KeypadView: View {
                 .padding(.vertical, 2)
             }
         }
-        .frame(minHeight: 60, maxHeight: 240)
+        .frame(minHeight: 60, maxHeight: keypadHidden ? CGFloat.infinity : 120)
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 12)
+                .onChanged { value in
+                    if !keypadHidden && abs(value.translation.height) > 12 {
+                        withAnimation(.easeInOut(duration: 0.25)) { keypadHidden = true }
+                    }
+                }
+        )
     }
     
     // MARK: - Keypad Grid
