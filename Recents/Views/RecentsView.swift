@@ -27,7 +27,7 @@ struct RecentsView: View {
                 .background(Color(.systemGroupedBackground))
             } else {
                 List {
-                    ForEach(viewModel.records, id: \.id) { record in
+                    ForEach(viewModel.records) { (record: CallRecord) in
                         HStack {
                             Image(systemName: record.iconName)
                                 .foregroundStyle(record.iconColor)
@@ -110,17 +110,30 @@ class RecentsViewModel: ObservableObject {
     func loadRecords() {
         let history = UserDefaults.standard.stringArray(forKey: StorageKeys.recentDialHistory) ?? []
         let freq = UserDefaults.standard.dictionary(forKey: StorageKeys.callFrequency) as? [String: Int] ?? [:]
+        let contacts = ContactStore.shared.fetchContactsForSearchData()
         
         records = history.enumerated().map { index, number in
             let digits = number.filter { $0.isNumber }
-            let contact = ContactStore.shared.search(by: digits)?.first
+            let contactName: String
+            if let matched = contacts.first(where: { data in
+                data.phoneNumbers.contains { $0.filter { $0.isNumber } == digits }
+            }) {
+                let fullName = [matched.familyName, matched.givenName]
+                    .filter { !$0.isEmpty }
+                    .joined(separator: " ")
+                contactName = fullName.isEmpty
+                    ? (matched.organizationName.isEmpty ? matched.nickname : matched.organizationName)
+                    : fullName
+            } else {
+                contactName = number
+            }
             let count = freq[digits] ?? 0
             
             return CallRecord(
                 id: "\(number)-\(index)",
                 number: number,
-                displayName: contact?.displayName ?? number,
-                numberLabel: contact?.numberLabel,
+                displayName: contactName,
+                numberLabel: nil,
                 timeString: formatTime(index: index),
                 durationString: count > 0 ? "拨打 \(count) 次" : "",
                 type: .outgoing
@@ -163,6 +176,17 @@ struct CallRecord: Identifiable {
     let durationString: String
     let type: CallType
     
+    // 显示用格式化号码：11 位手机号按 3-4-4 分段
+    var formattedNumber: String {
+        let digits = number.filter { $0.isNumber }
+        if digits.count == 11 && digits.hasPrefix("1") {
+            let a = digits.index(digits.startIndex, offsetBy: 3)
+            let b = digits.index(a, offsetBy: 4)
+            return "\(digits[..<a]) \(digits[a..<b]) \(digits[b...])"
+        }
+        return number
+    }
+    
     var iconName: String {
         switch type {
         case .incoming: return "arrow.down.left"
@@ -182,3 +206,4 @@ struct CallRecord: Identifiable {
 enum CallType {
     case incoming, outgoing, missed
 }
+
