@@ -239,8 +239,11 @@ struct KeypadView: View {
                     isExpanded: expandedContacts.contains(contact.identifier),
                     onDefaultTap: {
                         let numbers = viewModel.matchedNumbers[contact.identifier] ?? []
+                        let fallback = contact.phoneNumbers.first?.value.stringValue
                         if let phone = numbers.first?.value.stringValue, !phone.isEmpty {
-                            viewModel.dialedNumber = phone
+                            viewModel.callNumber(phone)
+                        } else if let first = fallback, !first.isEmpty {
+                            viewModel.callNumber(first)
                         }
                     },
                     onExpandTap: {
@@ -253,13 +256,13 @@ struct KeypadView: View {
                         }
                     },
                     onNumberTap: { number in
-                        viewModel.dialedNumber = number
+                        viewModel.callNumber(number)
                     }
                 )
                 .padding(.vertical, 2)
             }
         }
-        .frame(minHeight: 60, maxHeight: 120)
+        .frame(minHeight: 60, maxHeight: 240)
     }
     
     // MARK: - Keypad Grid
