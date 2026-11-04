@@ -35,8 +35,6 @@ struct KeypadView: View {
     @State private var showingSettings = false
     @State private var showSIMHint = false
     @State private var keypadHidden = false
-    @State private var numberChooserContact: CNContact? = nil
-    @State private var numberChooserNumbers: [CNLabeledValue<CNPhoneNumber>] = []
     @AppStorage("sim1_name") private var sim1Name: String = "SIM1"
     @AppStorage("sim2_name") private var sim2Name: String = "SIM2"
     @Environment(\.colorScheme) private var colorScheme
@@ -187,24 +185,6 @@ struct KeypadView: View {
                 .accessibilityLabel("恢复拨号键盘")
             }
         }
-        .confirmationDialog(
-            numberChooserContact.map { "选择「\(SuggestionRow.contactDisplayName(family: $0.familyName, given: $0.givenName))」要拨打的号码" } ?? "选择拨打的号码",
-            isPresented: Binding(
-                get: { numberChooserContact != nil },
-                set: { if !$0 { numberChooserContact = nil } }
-            ),
-            titleVisibility: .visible
-        ) {
-            ForEach(Array(numberChooserNumbers.enumerated()), id: \.offset) { _, number in
-                Button("\(CNLabeledValue<CNPhoneNumber>.localizedString(forLabel: number.label ?? ""))  \(T9NumberFormatter.formatT9(number.value.stringValue))") {
-                    viewModel.callNumber(number.value.stringValue)
-                    numberChooserContact = nil
-                }
-            }
-            Button("取消", role: .cancel) {
-                numberChooserContact = nil
-            }
-        }
         .sheet(isPresented: $showAddContact) {
             AddContactView(phoneNumber: viewModel.dialedNumber.filter { $0.isNumber || $0 == "+" })
         }
@@ -280,7 +260,7 @@ struct KeypadView: View {
                     contact: contact,
                     matchedNumbers: viewModel.matchedNumbers[contact.identifier] ?? contact.phoneNumbers,
                     query: viewModel.dialedNumber,
-                    onTap: { handleContactTap(contact) }
+                    onNumberSelected: { number in viewModel.callNumber(number) }
                 )
             }
             }
@@ -296,19 +276,6 @@ struct KeypadView: View {
                     }
                 }
         )
-    }
-    
-    /// 点击联系人：单号码直接拨号，多号码弹窗选择
-    private func handleContactTap(_ contact: CNContact) {
-        var numbers = viewModel.matchedNumbers[contact.identifier] ?? []
-        if numbers.isEmpty { numbers = contact.phoneNumbers }
-        guard let phone = numbers.first?.value.stringValue, !phone.isEmpty else { return }
-        if numbers.count > 1 {
-            numberChooserContact = contact
-            numberChooserNumbers = numbers
-        } else {
-            viewModel.callNumber(phone)
-        }
     }
     
     // MARK: - Keypad Grid
@@ -520,7 +487,7 @@ struct SuggestionGridCell: View {
     let contact: CNContact
     let matchedNumbers: [CNLabeledValue<CNPhoneNumber>]
     let query: String
-    let onTap: () -> Void
+    let onNumberSelected: (String) -> Void
     
     private var displayName: String {
         SuggestionRow.contactDisplayName(family: contact.familyName, given: contact.givenName)
@@ -531,7 +498,12 @@ struct SuggestionGridCell: View {
         return T9NumberFormatter.formatT9(first.value.stringValue)
     }
     
-    var body: some View {
+    private func menuTitle(_ number: CNLabeledValue<CNPhoneNumber>) -> String {
+        let label = CNLabeledValue<CNPhoneNumber>.localizedString(forLabel: number.label ?? "")
+        return "\(label)  \(T9NumberFormatter.formatT9(number.value.stringValue))"
+    }
+    
+    private var card: some View {
         VStack(alignment: .leading, spacing: 3) {
             HStack(spacing: 5) {
                 Text(displayName)
@@ -561,7 +533,27 @@ struct SuggestionGridCell: View {
         .background(Color(.systemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
         .contentShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-        .onTapGesture { onTap() }
+    }
+    
+    /// 多号码：Menu 就地弹出号码列表（锚定在被点击的卡片旁）；单号码：点击直接拨
+    var body: some View {
+        if matchedNumbers.count > 1 {
+            Menu {
+                ForEach(Array(matchedNumbers.enumerated()), id: \.offset) { _, number in
+                    Button(menuTitle(number)) {
+                        onNumberSelected(number.value.stringValue)
+                    }
+                }
+            } label: {
+                card
+            }
+        } else {
+            card.onTapGesture {
+                if let phone = matchedNumbers.first?.value.stringValue, !phone.isEmpty {
+                    onNumberSelected(phone)
+                }
+            }
+        }
     }
 }
 
