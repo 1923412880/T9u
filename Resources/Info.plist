@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>zh_CN</string>
 	<key>CFBundleDisplayName</key>
-	<string>T9u</string>
+	<string>电话</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>T9u</string>
+	<string>电话</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -23,7 +23,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSContactsUsageDescription</key>
-	<string>T9u 需要访问您的通讯录，以便提供 T9 中文拼音拨号搜索功能。</string>
+	<string>电话需要访问您的通讯录，以便提供 T9 中文拼音拨号搜索功能。</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -48,6 +48,6 @@
 		<string>voip</string>
 	</array>
 	<key>NSVoIPUsageDescription</key>
-	<string>T9u 需要访问通话功能，以便报告拨号记录到系统通话列表。</string>
+	<string>电话需要访问通话功能，以便报告拨号记录到系统通话列表。</string>
 </dict>
 </plist>
