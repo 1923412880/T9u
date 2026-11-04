@@ -22,6 +22,7 @@ struct T9SearchResult {
     let identifier: String
     let matchedPhoneNumbers: [String]
     let weight: Int
+    let name: String
 }
 
 // MARK: - T9 Search Engine (Huawei/MTK Style)
@@ -96,13 +97,16 @@ class T9SearchEngine {
                 results.append(T9SearchResult(
                     identifier: idx.identifier,
                     matchedPhoneNumbers: matchedNumbers,
-                    weight: boostedWeight
+                    weight: boostedWeight,
+                    name: idx.name
                 ))
             }
         }
         
-        results.sort { $0.weight > $1.weight }
-        return Array(results.prefix(10))
+        results.sort {
+            $0.weight != $1.weight ? $0.weight > $1.weight : $0.name < $1.name
+        }
+        return Array(results.prefix(30))
     }
     
     // MARK: - Core Search Logic (using ContactIndex)
