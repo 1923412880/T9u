@@ -93,7 +93,7 @@ class T9SearchEngine {
         for idx in contactIndexes {
             let (weight, matchedNumbers) = searchContactIndex(idx, digits: clean)
             if weight > 0 {
-                let boostedWeight = weight + freqBoost(callFrequency, idx.identifier)
+                let boostedWeight = weight + freqBoost(callFrequency, idx)
                 results.append(T9SearchResult(
                     identifier: idx.identifier,
                     matchedPhoneNumbers: matchedNumbers,
@@ -288,8 +288,21 @@ class T9SearchEngine {
     
     // MARK: - Helper
     
-    private func freqBoost(_ freq: [String: Int], _ identifier: String) -> Int {
-        let count = freq[identifier] ?? 0
-        return min(count * 5, 50)
+    private func freqBoost(_ freq: [String: Int], _ idx: ContactIndex) -> Int {
+        var best = 0
+        for phone in idx.phoneNumbers {
+            let d = phone.filter { $0.isNumber }
+            guard d.count >= 5 else { continue }
+            if let count = freq[d] { best = max(best, count) }
+            // 号码归一化匹配：兼容带国家码(如 +86)的存储差异
+            for (key, value) in freq where key != d {
+                if key.count >= d.count, key.hasSuffix(d) {
+                    best = max(best, value)
+                } else if d.count > key.count, d.hasSuffix(key) {
+                    best = max(best, value)
+                }
+            }
+        }
+        return min(best * 5, 50)
     }
 }
