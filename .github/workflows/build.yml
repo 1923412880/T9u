@@ -1,0 +1,36 @@
+name: Build unsigned IPA
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select newest Xcode
+        run: |
+          set -eux
+          SELECTED=$(python3 -c "import glob,re; print(max(glob.glob('/Applications/Xcode*.app'), key=lambda p: tuple(map(int, re.search(r'Xcode[_-]?(\d+(?:\.\d+)*)\.app', p).group(1).split('.'))) if re.search(r'Xcode[_-]?(\d+(?:\.\d+)*)\.app', p) else (0,)))")
+          if [ -n "$SELECTED" ]; then sudo xcode-select -s "$SELECTED"; fi
+          xcodebuild -version
+          xcodebuild -showsdks | grep -i ios || true
+      - name: Install xcodegen
+        run: brew install xcodegen
+      - name: Generate project
+        run: xcodegen generate
+      - name: List schemes
+        run: xcodebuild -list -project T9u.xcodeproj
+      - name: Archive (unsigned)
+        run: |
+          set -euxo pipefail
+          xcodebuild -project T9u.xcodeproj -scheme T9u -configuration Release -destination 'generic/platform=iOS' -archivePath build/T9u.xcarchive archive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" CODE_SIGN_ENTITLEMENTS=""
+      - name: Package unsigned IPA
+        run: |
+          set -euxo pipefail
+          mkdir -p build/Payload
+          cp -R build/T9u.xcarchive/Products/Applications/T9u.app build/Payload/
+          cd build && zip -qry T9u-unsigned.ipa Payload
+          ls -lh T9u-unsigned.ipa
+      - uses: actions/upload-artifact@v4
+        with:
+          name: T9u-unsigned-ipa
+          path: build/T9u-unsigned.ipa
+          if-no-files-found: error
