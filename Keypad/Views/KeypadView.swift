@@ -254,13 +254,14 @@ struct KeypadView: View {
     // MARK: - Suggestions
     private var suggestionList: some View {
         ScrollView {
-            LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
+            LazyVGrid(columns: suggestionColumns, spacing: 10) {
             ForEach(viewModel.suggestions, id: \.identifier) { contact in
                 SuggestionGridCell(
                     contact: contact,
                     matchedNumbers: viewModel.matchedNumbers[contact.identifier] ?? contact.phoneNumbers,
                     query: viewModel.dialedNumber,
-                    onNumberSelected: { number in viewModel.callNumber(number) }
+                    onNumberSelected: { number in viewModel.callNumber(number) },
+                    large: viewModel.suggestions.count == 1
                 )
             }
             }
@@ -276,6 +277,13 @@ struct KeypadView: View {
                     }
                 }
         )
+    }
+    
+    /// 仅一个候选时用单列大卡片（占满整行），多个候选用双列
+    private var suggestionColumns: [GridItem] {
+        viewModel.suggestions.count == 1
+            ? [GridItem(.flexible())]
+            : [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)]
     }
     
     // MARK: - Keypad Grid
@@ -488,6 +496,7 @@ struct SuggestionGridCell: View {
     let matchedNumbers: [CNLabeledValue<CNPhoneNumber>]
     let query: String
     let onNumberSelected: (String) -> Void
+    var large: Bool = false
     
     private var displayName: String {
         SuggestionRow.contactDisplayName(family: contact.familyName, given: contact.givenName)
@@ -507,7 +516,7 @@ struct SuggestionGridCell: View {
         VStack(alignment: .leading, spacing: 3) {
             HStack(spacing: 5) {
                 Text(displayName)
-                    .font(.subheadline.weight(.medium))
+                    .font(large ? .body.weight(.semibold) : .subheadline.weight(.medium))
                     .foregroundStyle(.primary)
                     .lineLimit(1)
                 if matchedNumbers.count > 1 {
@@ -522,13 +531,13 @@ struct SuggestionGridCell: View {
             }
             if !primaryNumberText.isEmpty {
                 Text(primaryNumberText)
-                    .font(.caption)
+                    .font(large ? .subheadline : .caption)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
             }
         }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 8)
+        .padding(.horizontal, large ? 14 : 10)
+        .padding(.vertical, large ? 14 : 8)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(.systemBackground))
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
