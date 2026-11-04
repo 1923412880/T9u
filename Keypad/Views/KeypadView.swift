@@ -35,6 +35,8 @@ struct KeypadView: View {
     @State private var showingSettings = false
     @State private var showSIMHint = false
     @State private var keypadHidden = false
+    @State private var numberChooserContact: CNContact? = nil
+    @State private var numberChooserNumbers: [CNLabeledValue<CNPhoneNumber>] = []
     @AppStorage("sim1_name") private var sim1Name: String = "SIM1"
     @AppStorage("sim2_name") private var sim2Name: String = "SIM2"
     @Environment(\.colorScheme) private var colorScheme
@@ -185,6 +187,24 @@ struct KeypadView: View {
                 .accessibilityLabel("恢复拨号键盘")
             }
         }
+        .confirmationDialog(
+            numberChooserContact.map { "选择「\(SuggestionRow.contactDisplayName(family: $0.familyName, given: $0.givenName))」要拨打的号码" } ?? "选择拨打的号码",
+            isPresented: Binding(
+                get: { numberChooserContact != nil },
+                set: { if !$0 { numberChooserContact = nil } }
+            ),
+            titleVisibility: .visible
+        ) {
+            ForEach(Array(numberChooserNumbers.enumerated()), id: \.offset) { _, number in
+                Button("\(CNLabeledValue<CNPhoneNumber>.localizedString(forLabel: number.label ?? ""))  \(T9NumberFormatter.formatT9(number.value.stringValue))") {
+                    viewModel.callNumber(number.value.stringValue)
+                    numberChooserContact = nil
+                }
+            }
+            Button("取消", role: .cancel) {
+                numberChooserContact = nil
+            }
+        }
         .sheet(isPresented: $showAddContact) {
             AddContactView(phoneNumber: viewModel.dialedNumber.filter { $0.isNumber || $0 == "+" })
         }
@@ -254,38 +274,20 @@ struct KeypadView: View {
     // MARK: - Suggestions
     private var suggestionList: some View {
         ScrollView {
+            LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
             ForEach(viewModel.suggestions, id: \.identifier) { contact in
-                SuggestionRow(
+                SuggestionGridCell(
                     contact: contact,
-                    matchedNumbers: viewModel.matchedNumbers[contact.identifier] ?? [],
+                    matchedNumbers: viewModel.matchedNumbers[contact.identifier] ?? contact.phoneNumbers,
                     query: viewModel.dialedNumber,
-                    isExpanded: expandedContacts.contains(contact.identifier),
-                    onDefaultTap: {
-                        let numbers = viewModel.matchedNumbers[contact.identifier] ?? []
-                        let fallback = contact.phoneNumbers.first?.value.stringValue
-                        if let phone = numbers.first?.value.stringValue, !phone.isEmpty {
-                            viewModel.callNumber(phone)
-                        } else if let first = fallback, !first.isEmpty {
-                            viewModel.callNumber(first)
-                        }
-                    },
-                    onExpandTap: {
-                        withAnimation {
-                            if expandedContacts.contains(contact.identifier) {
-                                expandedContacts.remove(contact.identifier)
-                            } else {
-                                expandedContacts.insert(contact.identifier)
-                            }
-                        }
-                    },
-                    onNumberTap: { number in
-                        viewModel.callNumber(number)
-                    }
+                    onTap: { handleContactTap(contact) }
                 )
-                .padding(.vertical, 2)
             }
+            }
+            .padding(.horizontal, 4)
+            .padding(.vertical, 4)
         }
-        .frame(minHeight: 60, maxHeight: keypadHidden ? CGFloat.infinity : 120)
+        .frame(minHeight: 60, maxHeight: keypadHidden ? CGFloat.infinity : 132)
         .simultaneousGesture(
             DragGesture(minimumDistance: 12)
                 .onChanged { value in
@@ -294,6 +296,19 @@ struct KeypadView: View {
                     }
                 }
         )
+    }
+    
+    /// 点击联系人：单号码直接拨号，多号码弹窗选择
+    private func handleContactTap(_ contact: CNContact) {
+        var numbers = viewModel.matchedNumbers[contact.identifier] ?? []
+        if numbers.isEmpty { numbers = contact.phoneNumbers }
+        guard let phone = numbers.first?.value.stringValue, !phone.isEmpty else { return }
+        if numbers.count > 1 {
+            numberChooserContact = contact
+            numberChooserNumbers = numbers
+        } else {
+            viewModel.callNumber(phone)
+        }
     }
     
     // MARK: - Keypad Grid
@@ -485,7 +500,7 @@ struct SuggestionRow: View {
     }
     
     /// 中文姓名姓在前（张龙），西文名名在前（John Smith）
-    private static func contactDisplayName(family: String, given: String) -> String {
+    static func contactDisplayName(family: String, given: String) -> String {
         if family.isEmpty { return given }
         if given.isEmpty { return family }
         func isCJK(_ s: String) -> Bool {
@@ -497,6 +512,56 @@ struct SuggestionRow: View {
 
     private func highlightNumber(_ number: String, query: String, font: Font = .caption) -> Text {
         highlightNumberText(number, query: query, font: font)
+    }
+}
+
+// MARK: - Suggestion Grid Cell（双列候选卡片）
+struct SuggestionGridCell: View {
+    let contact: CNContact
+    let matchedNumbers: [CNLabeledValue<CNPhoneNumber>]
+    let query: String
+    let onTap: () -> Void
+    
+    private var displayName: String {
+        SuggestionRow.contactDisplayName(family: contact.familyName, given: contact.givenName)
+    }
+    
+    private var primaryNumberText: String {
+        guard let first = matchedNumbers.first else { return "" }
+        return T9NumberFormatter.formatT9(first.value.stringValue)
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            HStack(spacing: 5) {
+                Text(displayName)
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(.primary)
+                    .lineLimit(1)
+                if matchedNumbers.count > 1 {
+                    Text("\(matchedNumbers.count)")
+                        .font(.caption2.weight(.medium))
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 5)
+                        .padding(.vertical, 1)
+                        .background(Capsule().fill(Color(.systemGray5)))
+                }
+                Spacer(minLength: 0)
+            }
+            if !primaryNumberText.isEmpty {
+                Text(primaryNumberText)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 8)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.systemBackground))
+        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .onTapGesture { onTap() }
     }
 }
 
