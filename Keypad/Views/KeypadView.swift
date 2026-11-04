@@ -33,6 +33,7 @@ struct KeypadView: View {
     @State private var isDeletePressed = false
     @State private var justDidLongPress = false
     @State private var showingSettings = false
+    @State private var showSIMHint = false
     @AppStorage("sim1_name") private var sim1Name: String = "SIM1"
     @AppStorage("sim2_name") private var sim2Name: String = "SIM2"
     @Environment(\.colorScheme) private var colorScheme
@@ -182,7 +183,10 @@ struct KeypadView: View {
     
     // MARK: - SIM Button
     private var simButton: some View {
-        Button { viewModel.switchSIM() } label: {
+        Button {
+            viewModel.switchSIM()
+            showSIMHint = true
+        } label: {
             HStack(spacing: 4) {
                 Image(systemName: "simcard")
                     .font(.caption)
@@ -198,6 +202,11 @@ struct KeypadView: View {
             Button("设置SIM名称") {
                 showingSettings = true
             }
+        }
+        .alert("SIM 线路说明", isPresented: $showSIMHint) {
+            Button("知道了", role: .cancel) {}
+        } message: {
+            Text("受 iOS 系统限制，第三方应用无法直接指定拨号使用哪张 SIM 卡，此开关仅作为线路偏好记录，实际拨号线路由系统决定。\n\n如需免去每次选卡：打开系统设置 → 电话 → 默认通话号码，选择固定线路后，拨号将直接使用该卡。")
         }
         .accessibilityLabel("切换SIM卡")
     }
@@ -391,8 +400,6 @@ struct SuggestionRow: View {
                         }
                     }
                 }
-                .contentShape(Rectangle())
-                .onTapGesture { onDefaultTap() }
                 
                 Spacer()
                 
@@ -408,6 +415,8 @@ struct SuggestionRow: View {
                         .onTapGesture { onExpandTap() }
                 }
             }
+            .contentShape(Rectangle())
+            .onTapGesture { onDefaultTap() }   // 整行可点选中号码，右手拇指也方便
             
             // 展开：显示全部号码，点击号码行直接拨打
             if isExpanded {
@@ -436,9 +445,20 @@ struct SuggestionRow: View {
     // MARK: - 姓名高亮（T9 拼音映射）
 
     private var highlightedNameText: Text {
-        let name = contact.givenName + " " + contact.familyName
+        let name = Self.contactDisplayName(family: contact.familyName, given: contact.givenName)
         guard !query.isEmpty else { return Text(name) }
         return highlightT9Text(name, query: query)
+    }
+    
+    /// 中文姓名姓在前（张龙），西文名名在前（John Smith）
+    private static func contactDisplayName(family: String, given: String) -> String {
+        if family.isEmpty { return given }
+        if given.isEmpty { return family }
+        func isCJK(_ s: String) -> Bool {
+            guard let v = s.unicodeScalars.first?.value else { return false }
+            return (0x4E00...0x9FFF).contains(v) || (0x3400...0x4DBF).contains(v)
+        }
+        return (isCJK(family) || isCJK(given)) ? family + given : given + " " + family
     }
 
     private func highlightNumber(_ number: String, query: String, font: Font = .caption) -> Text {
