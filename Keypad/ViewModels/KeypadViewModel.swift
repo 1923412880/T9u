@@ -26,6 +26,7 @@ class KeypadViewModel: ObservableObject {
     private var deleteTimer: Timer?
     private var isDeleting = false
     private var clearRecordsObserver: NSObjectProtocol?
+    private var historyChangeObserver: NSObjectProtocol?
 
     private let cacheQueue = DispatchQueue(label: "com.t9u.callFrequencyCache")
     private var _callFrequencyCache: [String: Int] = [:]
@@ -33,7 +34,7 @@ class KeypadViewModel: ObservableObject {
         get { cacheQueue.sync { _callFrequencyCache } }
         set { cacheQueue.sync { _callFrequencyCache = newValue } }
     }
-    
+
     private func loadCallFrequency() -> [String: Int] {
         return cacheQueue.sync {
             if _callFrequencyCache.isEmpty {
@@ -42,15 +43,8 @@ class KeypadViewModel: ObservableObject {
             return _callFrequencyCache
         }
     }
-    
-    private func saveCallFrequency(_ freq: [String: Int]) {
-        cacheQueue.sync {
-            _callFrequencyCache = freq
-            UserDefaults.standard.set(freq, forKey: StorageKeys.callFrequency)
-        }
-    }
 
-    @Published var recentHistory: [String] = []
+    @Published var recentHistory: [CallHistoryEntry] = []
 
     init() {
         selectedSIM = min(max(UserDefaults.standard.integer(forKey: StorageKeys.selectedSIM), 1), 2)
@@ -66,8 +60,16 @@ class KeypadViewModel: ObservableObject {
         ) { [weak self] _ in
             self?.loadRecentHistory()
         }
+
+        historyChangeObserver = NotificationCenter.default.addObserver(
+            forName: RecentDialStore.historyDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.loadRecentHistory()
+        }
     }
-    
+
     private func loadContactsIfAuthorized() {
         let status = CNContactStore.authorizationStatus(for: .contacts)
         switch status {
@@ -91,19 +93,14 @@ class KeypadViewModel: ObservableObject {
         if let observer = clearRecordsObserver {
             NotificationCenter.default.removeObserver(observer)
         }
+        if let observer = historyChangeObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
         searchTask?.cancel()
-        syncTimer?.invalidate()
     }
 
     private func loadRecentHistory() {
-        let allHistory = UserDefaults.standard.stringArray(forKey: StorageKeys.recentDialHistory) ?? []
-        let maxCount = AppSettings.shared.maxRecentRecords
-        if allHistory.count > maxCount {
-            recentHistory = Array(allHistory.prefix(maxCount))
-            UserDefaults.standard.set(recentHistory, forKey: StorageKeys.recentDialHistory)
-        } else {
-            recentHistory = allHistory
-        }
+        recentHistory = RecentDialStore.load()
     }
 
     func requestContactsAccess() async {
@@ -174,36 +171,21 @@ class KeypadViewModel: ObservableObject {
         deleteTimer = nil
     }
 
+    /// 记录拨打频次（仅在系统确认接手拨号后调用）
     func recordCall(_ number: String) {
-        var freq = loadCallFrequency()
-        freq[number, default: 0] += 1
-        saveCallFrequency(freq)
-        scheduleSync()
+        RecentDialStore.bumpFrequency(digits: number)
     }
 
+    /// 拨号：只有系统真实接手后才记录通话记录与频次；
+    /// 拨出后数秒内秒取消（未实际拨出）的记录会被 CallTracker 自动撤销。
     func callNumber(_ number: String) {
-        let clean = number.filter { $0.isNumber || $0 == "," || $0 == ";" || $0 == "+" }
-        guard !clean.isEmpty else { return }
-        let digitsOnly = clean.filter { $0.isNumber }
-        recordCall(digitsOnly)
-        addToHistory(clean)
-        
-        // 直接拨号 - 使用tel:// URL（iOS唯一公开的电话拨打API）
-        if let url = URL(string: "tel://\(clean)") {
-            UIApplication.shared.open(url, options: [:]) { success in
-                if success {
-                    print("[KeypadViewModel] 已拨号: \(clean)")
-                } else {
-                    print("[KeypadViewModel] 拨号失败: \(clean)")
-                }
-            }
-        }
+        RecentDialStore.dialVerified(number)
     }
 
     func callCurrentNumber() {
         if dialedNumber.isEmpty {
             if let last = recentHistory.first {
-                dialedNumber = last
+                dialedNumber = last.number
             }
             return
         }
@@ -237,17 +219,9 @@ class KeypadViewModel: ObservableObject {
         spamLabel = SpamLabelService.shared.lookup(digits)
     }
 
-    private func addToHistory(_ number: String) {
-        var history = recentHistory
-        history.removeAll { $0 == number }
-        history.insert(number, at: 0)
-        let maxCount = AppSettings.shared.maxRecentRecords
-        if history.count > maxCount {
-            history = Array(history.prefix(maxCount))
-        }
-        recentHistory = history
-        UserDefaults.standard.set(history, forKey: StorageKeys.recentDialHistory)
-        scheduleSync()
+    /// 兼容入口：新增一条拨出记录（带真实时间戳）
+    func addToHistory(_ number: String) {
+        RecentDialStore.add(number: number)
     }
 
     private func updateAttribution() {
@@ -272,23 +246,23 @@ class KeypadViewModel: ObservableObject {
 
         searchTask = Task.detached(priority: .userInitiated) { [weak self] in
             guard let self = self else { return }
-            
+
             // 搜索返回标识符
             let results = await self.searchEngine.searchAsync(currentNumber, callFrequency: freq)
 
             guard !Task.isCancelled else { return }
-            
+
             // 在主线程根据标识符获取 CNContact
             await MainActor.run { [weak self] in
                 guard let self = self, self.dialedNumber == currentNumber, !Task.isCancelled else { return }
-                
+
                 var contacts: [CNContact] = []
                 var numbersDict: [String: [CNLabeledValue<CNPhoneNumber>]] = [:]
-                
+
                 for result in results {
                     if let contact = ContactStore.shared.fetchContact(by: result.identifier) {
                         contacts.append(contact)
-                        
+
                         // 匹配电话号码
                         let matchedPhones = contact.phoneNumbers.filter { phone in
                             result.matchedPhoneNumbers.contains(phone.value.stringValue)
@@ -296,22 +270,10 @@ class KeypadViewModel: ObservableObject {
                         numbersDict[contact.identifier] = matchedPhones.isEmpty ? contact.phoneNumbers : matchedPhones
                     }
                 }
-                
+
                 self.suggestions = contacts
                 self.matchedNumbers = numbersDict
             }
-        }
-    }
-
-    private var needsSync = false
-    private var syncTimer: Timer?
-
-    private func scheduleSync() {
-        needsSync = true
-        syncTimer?.invalidate()
-        syncTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] _ in
-            guard let self = self, self.needsSync else { return }
-            self.needsSync = false
         }
     }
 }
@@ -320,6 +282,7 @@ class KeypadViewModel: ObservableObject {
 
 enum StorageKeys {
     static let recentDialHistory = "recentDialHistory"
+    static let recentDialHistoryV2 = "recentDialHistoryV2"
     static let callFrequency = "callFrequency"
     static let customSpamLabels = "customSpamLabels"
     static let selectedSIM = "selectedSIM"
