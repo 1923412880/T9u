@@ -4,7 +4,7 @@ import Contacts
 struct RecentsView: View {
     @StateObject private var viewModel = RecentsViewModel()
     @State private var showingDeleteConfirmation = false
-    
+
     var body: some View {
         NavigationStack {
             if viewModel.records.isEmpty {
@@ -14,12 +14,12 @@ struct RecentsView: View {
                         .foregroundStyle(.tertiary)
                         .padding(.bottom, 4)
 
-                    Text("没有通话记录")
+                    Text("没有拨出记录")
                         .font(.title3)
                         .fontWeight(.semibold)
                         .foregroundStyle(.primary)
 
-                    Text("你还没有通话记录")
+                    Text("通过本机拨出的通话会显示在这里")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -27,54 +27,60 @@ struct RecentsView: View {
                 .background(Color(.systemGroupedBackground))
             } else {
                 List {
-                    ForEach(viewModel.records) { (record: CallRecord) in
-                        HStack {
-                            Image(systemName: record.iconName)
-                                .foregroundStyle(record.iconColor)
-                                .frame(width: 24)
-                            
-                            VStack(alignment: .leading, spacing: 2) {
-                                HStack {
-                                    Text(record.displayName)
-                                        .font(.body)
-                                        .foregroundStyle(.primary)
-                                    
-                                    if let label = record.numberLabel {
-                                        Text(label)
-                                            .font(.caption)
-                                            .foregroundStyle(.secondary)
+                    Section {
+                        ForEach(viewModel.records) { (record: CallRecord) in
+                            HStack {
+                                Image(systemName: record.iconName)
+                                    .foregroundStyle(record.iconColor)
+                                    .frame(width: 24)
+
+                                VStack(alignment: .leading, spacing: 2) {
+                                    HStack {
+                                        Text(record.displayName)
+                                            .font(.body)
+                                            .foregroundStyle(.primary)
+
+                                        if let label = record.numberLabel {
+                                            Text(label)
+                                                .font(.caption)
+                                                .foregroundStyle(.secondary)
+                                        }
                                     }
+
+                                    Text(record.formattedNumber)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
                                 }
-                                
-                                Text(record.formattedNumber)
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
+
+                                Spacer()
+
+                                VStack(alignment: .trailing, spacing: 2) {
+                                    Text(record.timeString)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+
+                                    Text(record.durationString)
+                                        .font(.caption2)
+                                        .foregroundStyle(.tertiary)
+                                }
                             }
-                            
-                            Spacer()
-                            
-                            VStack(alignment: .trailing, spacing: 2) {
-                                Text(record.timeString)
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                
-                                Text(record.durationString)
-                                    .font(.caption2)
-                                    .foregroundStyle(.tertiary)
+                            .padding(.vertical, 4)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                viewModel.callNumber(record.number)
                             }
-                        }
-                        .padding(.vertical, 4)
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            viewModel.callNumber(record.number)
-                        }
-                        .swipeActions(edge: .trailing) {
-                            Button(role: .destructive) {
-                                viewModel.deleteRecord(record)
-                            } label: {
-                                Label("删除", systemImage: "trash")
+                            .swipeActions(edge: .trailing) {
+                                Button(role: .destructive) {
+                                    viewModel.deleteRecord(record)
+                                } label: {
+                                    Label("删除", systemImage: "trash")
+                                }
                             }
                         }
+                    } footer: {
+                        Text("仅记录通过本机真实拨出的通话，时间为实际拨出时间。iOS 不允许第三方应用读取系统通话记录，完整通话记录请在系统「电话」App 中查看。")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
                 }
                 .listStyle(.plain)
@@ -90,7 +96,7 @@ struct RecentsView: View {
                         }
                     }
                 }
-                .confirmationDialog("清除所有通话记录？", isPresented: $showingDeleteConfirmation) {
+                .confirmationDialog("清除所有拨出记录？", isPresented: $showingDeleteConfirmation) {
                     Button("清除", role: .destructive) {
                         viewModel.clearAllRecords()
                     }
@@ -106,15 +112,31 @@ struct RecentsView: View {
 
 class RecentsViewModel: ObservableObject {
     @Published var records: [CallRecord] = []
-    
+    private var historyObserver: NSObjectProtocol?
+
+    init() {
+        historyObserver = NotificationCenter.default.addObserver(
+            forName: RecentDialStore.historyDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.loadRecords()
+        }
+    }
+
+    deinit {
+        if let observer = historyObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
+
     func loadRecords() {
-        let history = UserDefaults.standard.stringArray(forKey: StorageKeys.recentDialHistory) ?? []
-        let freq = UserDefaults.standard.dictionary(forKey: StorageKeys.callFrequency) as? [String: Int] ?? [:]
+        let entries = RecentDialStore.load()
         let contacts = ContactStore.shared.fetchContactsForSearchData()
-        
-        records = history.enumerated().map { index, number in
-            let digits = number.filter { $0.isNumber }
-            let contactName: String
+
+        records = entries.map { entry -> CallRecord in
+            let digits = entry.number.filter { $0.isNumber }
+            var contactName: String? = nil
             if let matched = contacts.first(where: { data in
                 data.phoneNumbers.contains { $0.filter { $0.isNumber } == digits }
             }) {
@@ -124,46 +146,65 @@ class RecentsViewModel: ObservableObject {
                 contactName = fullName.isEmpty
                     ? (matched.organizationName.isEmpty ? matched.nickname : matched.organizationName)
                     : fullName
-            } else {
-                contactName = number
             }
-            let count = freq[digits] ?? 0
-            
+
             return CallRecord(
-                id: "\(number)-\(index)",
-                number: number,
-                displayName: contactName,
+                id: entry.number,
+                number: entry.number,
+                displayName: contactName ?? entry.number,
                 numberLabel: nil,
-                timeString: formatTime(index: index),
-                durationString: count > 0 ? "拨打 \(count) 次" : "",
+                timeString: formatTime(entry.date),
+                durationString: statusText(entry),
                 type: .outgoing
             )
         }
     }
-    
+
     func callNumber(_ number: String) {
-        if let url = URL(string: "tel://\(number)") {
-            UIApplication.shared.open(url)
-        }
+        RecentDialStore.dialVerified(number)
     }
-    
+
     func deleteRecord(_ record: CallRecord) {
-        var history = UserDefaults.standard.stringArray(forKey: StorageKeys.recentDialHistory) ?? []
-        history.removeAll { $0 == record.number }
-        UserDefaults.standard.set(history, forKey: StorageKeys.recentDialHistory)
+        RecentDialStore.remove(number: record.number)
         loadRecords()
     }
-    
+
     func clearAllRecords() {
-        UserDefaults.standard.removeObject(forKey: StorageKeys.recentDialHistory)
+        RecentDialStore.clearAll()
         records = []
     }
-    
-    private func formatTime(index: Int) -> String {
-        if index == 0 { return "刚刚" }
-        if index < 60 { return "\(index)分钟前" }
-        if index < 1440 { return "\(index / 60)小时前" }
-        return "\(index / 1440)天前"
+
+    // MARK: - 时间与状态显示
+
+    /// 真实拨出时间（不是估算）
+    private func formatTime(_ date: Date?) -> String {
+        guard let date = date else { return "" }
+        let cal = Calendar.current
+        let fmt = DateFormatter()
+        fmt.locale = Locale(identifier: "zh_CN")
+
+        if cal.isDateInToday(date) {
+            fmt.dateFormat = "HH:mm"
+            return "今天 " + fmt.string(from: date)
+        }
+        if cal.isDateInYesterday(date) {
+            fmt.dateFormat = "HH:mm"
+            return "昨天 " + fmt.string(from: date)
+        }
+        let days = cal.dateComponents([.day], from: cal.startOfDay(for: date), to: cal.startOfDay(for: Date())).day ?? 0
+        if days > 0 && days < 7 {
+            fmt.dateFormat = "EEE HH:mm"
+            return fmt.string(from: date)
+        }
+        fmt.dateFormat = "M月d日 HH:mm"
+        return fmt.string(from: date)
+    }
+
+    /// 通话状态（由系统通话实时观察得出）
+    private func statusText(_ entry: CallHistoryEntry) -> String {
+        if entry.connected == true { return "已接通" }
+        if entry.connected == false { return "未接通" }
+        return entry.date != nil ? "已拨出" : ""
     }
 }
 
@@ -175,7 +216,7 @@ struct CallRecord: Identifiable {
     let timeString: String
     let durationString: String
     let type: CallType
-    
+
     // 显示用格式化号码：11 位手机号按 3-4-4 分段
     var formattedNumber: String {
         let digits = number.filter { $0.isNumber }
@@ -186,7 +227,7 @@ struct CallRecord: Identifiable {
         }
         return number
     }
-    
+
     var iconName: String {
         switch type {
         case .incoming: return "arrow.down.left"
@@ -194,7 +235,7 @@ struct CallRecord: Identifiable {
         case .missed: return "arrow.down.left"
         }
     }
-    
+
     var iconColor: Color {
         switch type {
         case .missed: return .red
@@ -206,4 +247,3 @@ struct CallRecord: Identifiable {
 enum CallType {
     case incoming, outgoing, missed
 }
-
