@@ -7,7 +7,7 @@ private let logger = Logger(subsystem: "com.t9u.app", category: "CallTracker")
 
 /// 通过 CXCallObserver 实时观察系统通话，校验“点击拨号”后是否真的拨出/接通。
 /// 说明：iOS 没有读取系统通话记录的公开 API，只能在通话进行时实时观察。
-final class CallTracker {
+final class CallTracker: NSObject {
     static let shared = CallTracker()
 
     private let observer = CXCallObserver()
@@ -18,7 +18,8 @@ final class CallTracker {
     /// 已在 observer 中出现过的呼出通话：UUID → (首次看到的时间, 是否接通过)
     private var seenOutgoingCalls: [UUID: (firstSeen: Date, everConnected: Bool)] = [:]
 
-    private init() {
+    private override init() {
+        super.init()
         observer.setDelegate(self, queue: DispatchQueue.main)
     }
 
