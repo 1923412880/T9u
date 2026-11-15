@@ -130,7 +130,7 @@ final class AppSettings: ObservableObject {
     }
 
     private func clearRecentRecords() {
-        UserDefaults.standard.set([], forKey: StorageKeys.recentDialHistory)
+        RecentDialStore.clearAll()
         UserDefaults.standard.set([String: Int](), forKey: StorageKeys.callFrequency)
         NotificationCenter.default.post(name: NSNotification.Name(NotificationNames.recentRecordsCleared), object: nil)
     }
