@@ -41,3 +41,15 @@ targets:
       base:
         INFOPLIST_FILE: $(SRCROOT)/Resources/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: com.t9u.app
+
+  ScreenOff:
+    type: application
+    platform: iOS
+    sources:
+      - path: ScreenOff
+        excludes:
+          - Resources/Info.plist
+    settings:
+      base:
+        INFOPLIST_FILE: $(SRCROOT)/ScreenOff/Resources/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.t9u.screenoff
