@@ -29,8 +29,24 @@ jobs:
           cp -R build/T9u.xcarchive/Products/Applications/T9u.app build/Payload/
           cd build && zip -qry T9u-unsigned.ipa Payload
           ls -lh T9u-unsigned.ipa
+      - name: Archive ScreenOff (unsigned)
+        run: |
+          set -euxo pipefail
+          xcodebuild -project T9u.xcodeproj -scheme ScreenOff -configuration Release -destination 'generic/platform=iOS' -archivePath build/ScreenOff.xcarchive archive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" CODE_SIGN_ENTITLEMENTS=""
+      - name: Package ScreenOff IPA
+        run: |
+          set -euxo pipefail
+          mkdir -p build/so/Payload
+          cp -R build/ScreenOff.xcarchive/Products/Applications/ScreenOff.app build/so/Payload/
+          cd build/so && zip -qry ScreenOff-unsigned.ipa Payload
+          ls -lh ScreenOff-unsigned.ipa
       - uses: actions/upload-artifact@v4
         with:
           name: T9u-unsigned-ipa
           path: build/T9u-unsigned.ipa
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ScreenOff-unsigned-ipa
+          path: build/so/ScreenOff-unsigned.ipa
           if-no-files-found: error
