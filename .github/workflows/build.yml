@@ -40,6 +40,19 @@ jobs:
           cp -R build/ScreenOff.xcarchive/Products/Applications/ScreenOff.app build/so/Payload/
           cd build/so && zip -qry ScreenOff-unsigned.ipa Payload
           ls -lh ScreenOff-unsigned.ipa
+      - name: Build BlockIntents.dylib
+        run: |
+          set -euxo pipefail
+          mkdir -p blockout
+          SDK=$(xcrun --sdk iphoneos --show-sdk-path)
+          clang -O2 -Wall -fobjc-arc -fvisibility=hidden \
+            -miphoneos-version-min=13.0 -arch arm64 \
+            -isysroot "$SDK" \
+            -dynamiclib -install_name @rpath/BlockIntents.dylib \
+            -framework Foundation \
+            Tweak/BlockIntents.m -o blockout/BlockIntents.dylib
+          ls -lh blockout/BlockIntents.dylib
+          file blockout/BlockIntents.dylib
       - uses: actions/upload-artifact@v4
         with:
           name: T9u-unsigned-ipa
@@ -49,4 +62,9 @@ jobs:
         with:
           name: ScreenOff-unsigned-ipa
           path: build/so/ScreenOff-unsigned.ipa
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BlockIntents-dylib
+          path: blockout/BlockIntents.dylib
           if-no-files-found: error
